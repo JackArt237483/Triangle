@@ -2,76 +2,43 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Треугольник</title>
+    <title>Треугольник из чисел</title>
     <style>
         body {
-            background: #111;
-            color: #0f0;
             font-family: monospace;
-            padding: 20px;
-            text-align: center;
+            padding: 30px;
+            background: #f9f9f9;
         }
-        input, button {
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="number"] {
+            padding: 10px;
             font-size: 16px;
-            padding: 6px 12px;
-            margin-bottom: 15px;
+            width: 100px;
         }
-        .row {
-            display: flex;
-            justify-content: center;
-            margin: 5px 0;
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
         }
-        .cell {
-            width: 40px;
-            height: 40px;
-            margin: 2px;
-            background: #222;
-            border: 1px solid #0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+        .output {
+            white-space: pre;
+            background: #eee;
+            padding: 20px;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
 
-<h2>Равнобедренный треугольник из чисел</h2>
+<h1>Построить треугольник из чисел</h1>
 
-<input type="number" id="numberInput" placeholder="Введите число" required>
-<button onclick="buildTriangle()">Построить</button>
-
-<div id="triangleOutput"></div>
-
-<script>
-    function buildTriangle() {
-        const n = document.getElementById("numberInput").value;
-        fetch(`triangle.php?n=${n}`)
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById("triangleOutput");
-                container.innerHTML = "";
-
-                if (data.error) {
-                    container.innerHTML = `<p style="color: red;">${data.error}</p>`;
-                    return;
-                }
-
-                data.triangle.forEach(row => {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.className = "row";
-                    row.forEach(num => {
-                        const cell = document.createElement("div");
-                        cell.className = "cell";
-                        cell.textContent = num;
-                        rowDiv.appendChild(cell);
-                    });
-                    container.appendChild(rowDiv);
-                });
-            });
-    }
-</script>
+<form method="get" action="triangle.php">
+    <label for="n">Введите число:</label>
+    <input type="number" name="n" id="n" required>
+    <button type="submit">Построить</button>
+</form>
 
 </body>
 </html>
-

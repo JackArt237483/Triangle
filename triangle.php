@@ -1,5 +1,4 @@
 <?php
-header('Content-Type: application/json');
 
 function canFormIsoscelesTriangle($n) {
     $rows = 0;
@@ -13,30 +12,42 @@ function canFormIsoscelesTriangle($n) {
     return ($sum === $n) ? $rows : false;
 }
 
-function buildTriangle($n) {
+function generateTriangle($n, $webMode = false) {
     $rows = canFormIsoscelesTriangle($n);
-
     if ($rows === false) {
-        return ["error" => "Невозможно построить треугольник"];
+        return $webMode ? "Невозможно построить треугольник" : "Невозможно построить треугольник\n";
     }
 
-    $triangle = [];
     $current = 1;
+    $output = "";
+
     for ($i = 1; $i <= $rows; $i++) {
         $count = 2 * $i - 1;
-        $row = [];
+        $spaces = $rows - $i;
+        $spaceChar = $webMode ? "&nbsp;" : " ";
+        $lineBreak = $webMode ? "<br>" : "\n";
+
+        $output .= str_repeat($spaceChar, $spaces * 2);
         for ($j = 0; $j < $count; $j++) {
-            $row[] = $current++;
+            $output .= $current++ . " ";
         }
-        $triangle[] = $row;
+        $output .= $lineBreak;
     }
 
-    return ["triangle" => $triangle];
+    return $webMode ? "<pre>$output</pre>" : $output;
 }
 
+// --- CLI режим ---
+if (php_sapi_name() === 'cli') {
+    $n = (int)($argv[1] ?? 0);
+    echo generateTriangle($n);
+    exit;
+}
+
+// --- WEB режим ---
 if (isset($_GET['n']) && is_numeric($_GET['n'])) {
-    $n = intval($_GET['n']);
-    echo json_encode(buildTriangle($n));
+    $n = (int)$_GET['n'];
+    echo generateTriangle($n, true);
 } else {
-    echo json_encode(["error" => "Введите корректное число"]);
+    echo "<pre>Введите корректное число в параметре 'n'. Например: ?n=9</pre>";
 }
